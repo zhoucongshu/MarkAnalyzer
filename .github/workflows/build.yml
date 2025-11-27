@@ -1,0 +1,35 @@
+name: Build MarkAnalyzer EXE
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+          pip install -r MarkAnalyzer/requirements.txt
+
+      - name: Build EXE (onefile, no console)
+        working-directory: MarkAnalyzer
+        run: |
+          pyinstaller mark_analyzer.py --name MarkAnalyzer --noconsole --onefile
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: MarkAnalyzer-exe
+          path: MarkAnalyzer/dist/MarkAnalyzer.exe
