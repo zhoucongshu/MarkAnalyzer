@@ -1,9 +1,8 @@
+
 name: Build MarkAnalyzer EXE
 
 on:
   workflow_dispatch:
-  push:
-    branches: [ main ]
 
 jobs:
   build-windows:
@@ -21,10 +20,9 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install pyinstaller
-          pip install -r MarkAnalyzer/requirements.txt
+          pip install -r requirements.txt   
 
       - name: Build EXE (onefile, no console)
-        working-directory: MarkAnalyzer
         run: |
           pyinstaller mark_analyzer.py --name MarkAnalyzer --noconsole --onefile
 
@@ -32,4 +30,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: MarkAnalyzer-exe
-          path: MarkAnalyzer/dist/MarkAnalyzer.exe
+          path: dist/MarkAnalyzer.exe      
